@@ -33,6 +33,7 @@ import com.android.axion.platform.AxPlatformClient
 import io.chaldeaprjkt.gamespace.R
 import io.chaldeaprjkt.gamespace.data.AppSettings
 import io.chaldeaprjkt.gamespace.data.SystemSettings
+import io.chaldeaprjkt.gamespace.gamebar.CrosshairController
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -102,6 +103,9 @@ class TileRepository @Inject constructor(
     private val systemSettings: SystemSettings,
 ) {
     private lateinit var platform: AxPlatformClient
+
+    // Set by SessionService after crosshairController is initialised
+    var crosshairController: CrosshairController? = null
 
     private lateinit var defaultTiles: List<TileAction>
     private val platformTiles = mutableListOf<PlatformTile>()
@@ -417,6 +421,19 @@ class TileRepository @Inject constructor(
                 setter = {
                     appSettings.stayAwake = it
                     systemSettings.stayAwake = it
+                }
+            )
+        )
+
+        add(
+            ToggleableTile(
+                id = "crosshair",
+                label = context.getString(R.string.tile_crosshair),
+                icon = R.drawable.ic_crosshair,
+                state = mutableStateOf(appSettings.crosshairEnabled),
+                setter = { enabled ->
+                    appSettings.crosshairEnabled = enabled
+                    crosshairController?.updateState()
                 }
             )
         )

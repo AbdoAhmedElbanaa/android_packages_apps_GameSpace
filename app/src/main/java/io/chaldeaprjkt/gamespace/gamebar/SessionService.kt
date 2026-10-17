@@ -62,6 +62,7 @@ class SessionService : Hilt_SessionService() {
     private lateinit var sidebar: GameSidebar
     private lateinit var mapperController: MapperController
     private lateinit var platform: AxPlatformClient
+    private lateinit var crosshairController: CrosshairController
 
     private var dndEnabledByUs = false
     private var previousDndFilter = NotificationManager.INTERRUPTION_FILTER_ALL
@@ -105,6 +106,13 @@ class SessionService : Hilt_SessionService() {
             mapperController = mapperController,
         )
         sidebar.onCreate()
+
+        crosshairController = CrosshairController(
+            context = this,
+            wm = windowManager,
+            appSettings = appSettings,
+        )
+        tileRepository.crosshairController = crosshairController
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -146,6 +154,7 @@ class SessionService : Hilt_SessionService() {
         applyAutoDnd()
 
         sidebar.onGameStart(packageName)
+        crosshairController.updateState()
 
         callListener.init()
     }
@@ -154,6 +163,7 @@ class SessionService : Hilt_SessionService() {
         Log.i(TAG, "Stopping game session")
 
         sidebar.onGameLeave()
+        crosshairController.destroy()
         session.unregister()
         callListener.destroy()
         restoreAutoDnd()

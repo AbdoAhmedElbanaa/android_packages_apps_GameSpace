@@ -107,6 +107,27 @@ class AppSettings @Inject constructor(private val context: Context) {
         get() = db.getBoolean(KEY_PULSE_BASS_DISABLE, true)
         set(it) = db.edit().putBoolean(KEY_PULSE_BASS_DISABLE, it).apply()
 
+    // Crosshair overlay settings
+    var crosshairEnabled: Boolean
+        get() = db.getBoolean(KEY_CROSSHAIR_ENABLED, false)
+        set(value) = db.edit().putBoolean(KEY_CROSSHAIR_ENABLED, value).apply()
+
+    var crosshairStyle: Int
+        get() = db.getInt(KEY_CROSSHAIR_STYLE, 1)
+        set(value) = db.edit().putInt(KEY_CROSSHAIR_STYLE, value).apply()
+
+    var crosshairColor: Int
+        get() = db.getInt(KEY_CROSSHAIR_COLOR, 0xFFFFFFFF.toInt())
+        set(value) = db.edit().putInt(KEY_CROSSHAIR_COLOR, value).apply()
+
+    var crosshairSize: Int
+        get() = db.getInt(KEY_CROSSHAIR_SIZE, 48)
+        set(value) = db.edit().putInt(KEY_CROSSHAIR_SIZE, value).apply()
+
+    var crosshairOpacity: Int
+        get() = db.getInt(KEY_CROSSHAIR_OPACITY, 100)
+        set(value) = db.edit().putInt(KEY_CROSSHAIR_OPACITY, value).apply()
+
     companion object {
         const val KEY_AUTO_BRIGHTNESS_DISABLE = "gamespace_auto_brightness_disabled"
         const val KEY_3SCREENSHOT_DISABLE = "gamespace_tfgesture_disabled"
@@ -124,5 +145,10 @@ class AppSettings @Inject constructor(private val context: Context) {
         const val KEY_ICON_IDLE_ALPHA = "gamespace_icon_idle_alpha"
         const val KEY_AUTO_DND = "gamespace_auto_dnd"
         const val KEY_PULSE_BASS_DISABLE = "gamespace_pulse_bass_haptics_disabled"
+        const val KEY_CROSSHAIR_ENABLED = "gamespace_crosshair_enabled"
+        const val KEY_CROSSHAIR_STYLE   = "gamespace_crosshair_style"
+        const val KEY_CROSSHAIR_COLOR   = "gamespace_crosshair_color"
+        const val KEY_CROSSHAIR_SIZE    = "gamespace_crosshair_size"
+        const val KEY_CROSSHAIR_OPACITY = "gamespace_crosshair_opacity"
     }
 }

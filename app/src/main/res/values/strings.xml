@@ -113,6 +113,13 @@
     <string name="tile_dark_mode">Dark Mode</string>
     <string name="tile_location">Location</string>
     <string name="tile_battery_saver">Battery Saver</string>
+    <string name="tile_crosshair">Crosshair</string>
+    <string name="crosshair_section_title">Crosshair Overlay</string>
+    <string name="crosshair_enable">Show Crosshair</string>
+    <string name="crosshair_style">Crosshair Style</string>
+    <string name="crosshair_opacity">Opacity</string>
+    <string name="crosshair_size">Size</string>
+    <string name="crosshair_color">Color</string>
     <string name="tile_hotspot">Hotspot</string>
     <string name="tile_nfc">NFC</string>
     <string name="tile_night_light">Night Light</string>

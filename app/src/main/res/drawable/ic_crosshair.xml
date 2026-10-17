@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Crosshair icon for GameBar tile -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Vertical bar top -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M11.25,2 L12.75,2 L12.75,9.5 L11.25,9.5 Z" />
+    <!-- Vertical bar bottom -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M11.25,14.5 L12.75,14.5 L12.75,22 L11.25,22 Z" />
+    <!-- Horizontal bar left -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M2,11.25 L9.5,11.25 L9.5,12.75 L2,12.75 Z" />
+    <!-- Horizontal bar right -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M14.5,11.25 L22,11.25 L22,12.75 L14.5,12.75 Z" />
+    <!-- Center dot -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M10.5,10.5 A1.5,1.5 0 1,1 13.5,12 A1.5,1.5 0 1,1 10.5,10.5 Z" />
+</vector>

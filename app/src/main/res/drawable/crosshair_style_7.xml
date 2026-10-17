@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Crosshair Style 7: X shape -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Diagonal bar left-to-right (rotate 45°) -->
+    <item>
+        <rotate android:fromDegrees="45" android:pivotX="50%" android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <solid android:color="@android:color/white" />
+                <size android:width="3dp" android:height="40dp" />
+            </shape>
+        </rotate>
+    </item>
+    <!-- Diagonal bar right-to-left (rotate -45°) -->
+    <item>
+        <rotate android:fromDegrees="-45" android:pivotX="50%" android:pivotY="50%">
+            <shape android:shape="rectangle">
+                <solid android:color="@android:color/white" />
+                <size android:width="3dp" android:height="40dp" />
+            </shape>
+        </rotate>
+    </item>
+</layer-list>
