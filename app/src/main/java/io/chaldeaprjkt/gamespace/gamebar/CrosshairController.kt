@@ -29,7 +29,7 @@ import io.chaldeaprjkt.gamespace.data.AppSettings
 
 /**
  * Controls the crosshair overlay shown on top of game sessions.
- * Supports 8 visual styles, custom color tinting, size, and opacity.
+ * Supports 8 visual styles, custom color tinting, size, opacity, and positioning.
  */
 class CrosshairController(
     private val context: Context,
@@ -40,7 +40,6 @@ class CrosshairController(
     private var crosshairView: ImageView? = null
     private var isAdded = false
 
-    // Maps style index (1–8) to drawable resource
     private val styleResMap = mapOf(
         1 to R.drawable.crosshair_style_1,
         2 to R.drawable.crosshair_style_2,
@@ -52,78 +51,73 @@ class CrosshairController(
         8 to R.drawable.crosshair_style_8
     )
 
-    /** Call when session starts or settings change to show/hide/update the crosshair. */
     fun updateState() {
         handler.post {
             if (appSettings.crosshairEnabled) {
-                if (isAdded) {
-                    updateCrosshairView()
-                } else {
-                    show()
-                }
+                showCrosshair()
             } else {
-                hide()
+                hideCrosshair()
             }
         }
     }
 
-    private fun show() {
+    private fun showCrosshair() {
+        val view = crosshairView ?: ImageView(context).also {
+            crosshairView = it
+        }
+
+        val styleRes = styleResMap[appSettings.crosshairStyle] ?: R.drawable.crosshair_style_1
+        view.setImageResource(styleRes)
+        view.setColorFilter(appSettings.crosshairColor, PorterDuff.Mode.SRC_IN)
+        view.alpha = appSettings.crosshairOpacity
+
         val density = context.resources.displayMetrics.density
         val sizePx = (appSettings.crosshairSize * density).toInt()
 
-        val params = WindowManager.LayoutParams(
-            sizePx,
-            sizePx,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                    or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-            PixelFormat.TRANSLUCENT
-        ).apply {
+        val params = WindowManager.LayoutParams().apply {
+            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            format = PixelFormat.TRANSLUCENT
+            width = sizePx
+            height = sizePx
             gravity = Gravity.CENTER
-        }
-
-        crosshairView = ImageView(context).also { iv ->
-            updateCrosshairDrawable(iv)
+            x = (appSettings.crosshairOffsetX * density).toInt()
+            y = (appSettings.crosshairOffsetY * density).toInt()
+            layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
         }
 
         try {
-            wm.addView(crosshairView, params)
-            isAdded = true
+            if (!isAdded) {
+                wm.addView(view, params)
+                isAdded = true
+            } else {
+                wm.updateViewLayout(view, params)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    fun hideCrosshair() {
+        handler.post {
+            crosshairView?.let { view ->
+                if (isAdded) {
+                    try {
+                        wm.removeViewImmediate(view)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    isAdded = false
+                }
+            }
             crosshairView = null
         }
     }
 
-    private fun hide() {
-        if (!isAdded || crosshairView == null) return
-        try {
-            wm.removeView(crosshairView)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            crosshairView = null
-            isAdded = false
-        }
-    }
-
-    private fun updateCrosshairView() {
-        crosshairView?.let { updateCrosshairDrawable(it) }
-    }
-
-    private fun updateCrosshairDrawable(view: ImageView) {
-        val styleRes = styleResMap[appSettings.crosshairStyle] ?: R.drawable.crosshair_style_1
-        val opacity  = appSettings.crosshairOpacity / 100f
-        val color    = appSettings.crosshairColor
-
-        view.setImageResource(styleRes)
-        view.setColorFilter(color, PorterDuff.Mode.SRC_IN)
-        view.alpha = opacity
-    }
-
-    /** Called when the game session ends — removes the crosshair cleanly. */
     fun destroy() {
-        handler.post { hide() }
+        hideCrosshair()
     }
 }

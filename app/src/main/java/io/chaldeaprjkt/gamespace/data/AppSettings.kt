@@ -19,6 +19,7 @@ package io.chaldeaprjkt.gamespace.data
 
 import android.app.Service
 import android.content.Context
+import android.content.SharedPreferences
 import android.provider.Settings
 import android.view.WindowManager
 import androidx.preference.PreferenceManager
@@ -30,6 +31,14 @@ class AppSettings @Inject constructor(private val context: Context) {
 
     private val db by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
     private val wm by lazy { context.getSystemService(Service.WINDOW_SERVICE) as WindowManager }
+
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        db.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        db.unregisterOnSharedPreferenceChangeListener(listener)
+    }
 
     var x
         get() = db.getInt("offset_x", wm.maximumWindowMetrics.bounds.width() / 2)
@@ -107,26 +116,46 @@ class AppSettings @Inject constructor(private val context: Context) {
         get() = db.getBoolean(KEY_PULSE_BASS_DISABLE, true)
         set(it) = db.edit().putBoolean(KEY_PULSE_BASS_DISABLE, it).apply()
 
+    var activeGamePackage: String? = null
+
+    private fun getPrefKey(baseKey: String): String {
+        val pkg = activeGamePackage
+        return if (pkg != null) "${pkg}_${baseKey}" else baseKey
+    }
+
     // Crosshair overlay settings
     var crosshairEnabled: Boolean
-        get() = db.getBoolean(KEY_CROSSHAIR_ENABLED, false)
-        set(value) = db.edit().putBoolean(KEY_CROSSHAIR_ENABLED, value).apply()
+        get() = db.getBoolean(getPrefKey(KEY_CROSSHAIR_ENABLED), db.getBoolean(KEY_CROSSHAIR_ENABLED, false))
+        set(value) = db.edit().putBoolean(getPrefKey(KEY_CROSSHAIR_ENABLED), value).apply()
 
     var crosshairStyle: Int
-        get() = db.getInt(KEY_CROSSHAIR_STYLE, 1)
-        set(value) = db.edit().putInt(KEY_CROSSHAIR_STYLE, value).apply()
+        get() = db.getInt(getPrefKey(KEY_CROSSHAIR_STYLE), db.getInt(KEY_CROSSHAIR_STYLE, 1))
+        set(value) = db.edit().putInt(getPrefKey(KEY_CROSSHAIR_STYLE), value).apply()
 
     var crosshairColor: Int
-        get() = db.getInt(KEY_CROSSHAIR_COLOR, 0xFFFFFFFF.toInt())
-        set(value) = db.edit().putInt(KEY_CROSSHAIR_COLOR, value).apply()
+        get() = db.getInt(getPrefKey(KEY_CROSSHAIR_COLOR), db.getInt(KEY_CROSSHAIR_COLOR, 0xFF00FF00.toInt()))
+        set(value) = db.edit().putInt(getPrefKey(KEY_CROSSHAIR_COLOR), value).apply()
 
     var crosshairSize: Int
-        get() = db.getInt(KEY_CROSSHAIR_SIZE, 48)
-        set(value) = db.edit().putInt(KEY_CROSSHAIR_SIZE, value).apply()
+        get() = db.getInt(getPrefKey(KEY_CROSSHAIR_SIZE), db.getInt(KEY_CROSSHAIR_SIZE, 36))
+        set(value) = db.edit().putInt(getPrefKey(KEY_CROSSHAIR_SIZE), value).apply()
 
-    var crosshairOpacity: Int
-        get() = db.getInt(KEY_CROSSHAIR_OPACITY, 100)
-        set(value) = db.edit().putInt(KEY_CROSSHAIR_OPACITY, value).apply()
+    var crosshairOpacity: Float
+        get() = try {
+            db.getFloat(getPrefKey(KEY_CROSSHAIR_OPACITY), db.getFloat(KEY_CROSSHAIR_OPACITY, 1f))
+        } catch (e: ClassCastException) {
+            val intVal = db.getInt(getPrefKey(KEY_CROSSHAIR_OPACITY), db.getInt(KEY_CROSSHAIR_OPACITY, 100))
+            intVal / 100f
+        }
+        set(value) = db.edit().putFloat(getPrefKey(KEY_CROSSHAIR_OPACITY), value).apply()
+
+    var crosshairOffsetX: Int
+        get() = db.getInt(getPrefKey(KEY_CROSSHAIR_OFFSET_X), db.getInt(KEY_CROSSHAIR_OFFSET_X, 0))
+        set(value) = db.edit().putInt(getPrefKey(KEY_CROSSHAIR_OFFSET_X), value).apply()
+
+    var crosshairOffsetY: Int
+        get() = db.getInt(getPrefKey(KEY_CROSSHAIR_OFFSET_Y), db.getInt(KEY_CROSSHAIR_OFFSET_Y, 0))
+        set(value) = db.edit().putInt(getPrefKey(KEY_CROSSHAIR_OFFSET_Y), value).apply()
 
     companion object {
         const val KEY_AUTO_BRIGHTNESS_DISABLE = "gamespace_auto_brightness_disabled"
@@ -150,5 +179,7 @@ class AppSettings @Inject constructor(private val context: Context) {
         const val KEY_CROSSHAIR_COLOR   = "gamespace_crosshair_color"
         const val KEY_CROSSHAIR_SIZE    = "gamespace_crosshair_size"
         const val KEY_CROSSHAIR_OPACITY = "gamespace_crosshair_opacity"
+        const val KEY_CROSSHAIR_OFFSET_X = "gamespace_crosshair_offset_x"
+        const val KEY_CROSSHAIR_OFFSET_Y = "gamespace_crosshair_offset_y"
     }
 }

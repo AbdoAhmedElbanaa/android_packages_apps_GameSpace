@@ -115,11 +115,16 @@
     <string name="tile_battery_saver">Battery Saver</string>
     <string name="tile_crosshair">Crosshair</string>
     <string name="crosshair_section_title">Crosshair Overlay</string>
+    <string name="crosshair_settings_title">Crosshair Settings</string>
     <string name="crosshair_enable">Show Crosshair</string>
     <string name="crosshair_style">Crosshair Style</string>
     <string name="crosshair_opacity">Opacity</string>
     <string name="crosshair_size">Size</string>
     <string name="crosshair_color">Color</string>
+    <string name="crosshair_position_tuning">Position Tuning</string>
+    <string name="crosshair_reset">Reset</string>
+    <string name="crosshair_offset_x">X Offset</string>
+    <string name="crosshair_offset_y">Y Offset</string>
     <string name="tile_hotspot">Hotspot</string>
     <string name="tile_nfc">NFC</string>
     <string name="tile_night_light">Night Light</string>

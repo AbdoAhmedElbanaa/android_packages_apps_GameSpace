@@ -23,6 +23,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.IBinder
@@ -63,6 +64,20 @@ class SessionService : Hilt_SessionService() {
     private lateinit var mapperController: MapperController
     private lateinit var platform: AxPlatformClient
     private lateinit var crosshairController: CrosshairController
+
+    private val preferenceListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key != null && (
+            key.endsWith(AppSettings.KEY_CROSSHAIR_ENABLED) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_STYLE) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_SIZE) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_COLOR) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_OPACITY) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_OFFSET_X) ||
+            key.endsWith(AppSettings.KEY_CROSSHAIR_OFFSET_Y)
+        )) {
+            crosshairController.updateState()
+        }
+    }
 
     private var dndEnabledByUs = false
     private var previousDndFilter = NotificationManager.INTERRUPTION_FILTER_ALL
@@ -113,6 +128,7 @@ class SessionService : Hilt_SessionService() {
             appSettings = appSettings,
         )
         tileRepository.crosshairController = crosshairController
+        appSettings.registerListener(preferenceListener)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -145,6 +161,7 @@ class SessionService : Hilt_SessionService() {
         
         Log.i(TAG, "Starting game session for $packageName")
         currentPackage = packageName
+        appSettings.activeGamePackage = packageName
         
         session.unregister()
         session.register(packageName)
@@ -164,6 +181,7 @@ class SessionService : Hilt_SessionService() {
 
         sidebar.onGameLeave()
         crosshairController.destroy()
+        appSettings.activeGamePackage = null
         session.unregister()
         callListener.destroy()
         restoreAutoDnd()
@@ -204,6 +222,7 @@ class SessionService : Hilt_SessionService() {
 
     override fun onDestroy() {
         Log.d(TAG, "SessionService destroyed")
+        appSettings.unregisterListener(preferenceListener)
         stopGameSession()
         tileRepository.dispose()
         gameModeUtils.unbind()

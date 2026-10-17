@@ -178,7 +178,13 @@ class TileRepository @Inject constructor(
     private fun loadTileOrder(): List<String> {
         val savedOrder = appSettings.tileOrder
         return if (savedOrder.isNotEmpty()) {
-            savedOrder.filter { id -> defaultTiles.any { it.id == id } }
+            val validSaved = savedOrder.filter { id -> defaultTiles.any { it.id == id } }.toMutableList()
+            defaultTiles.forEach { tile ->
+                if (!validSaved.contains(tile.id)) {
+                    validSaved.add(tile.id)
+                }
+            }
+            validSaved
         } else {
             defaultTiles.map { it.id }
         }

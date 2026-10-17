@@ -110,6 +110,12 @@
             android:summary="@string/lock_gesture_summary"
             android:defaultValue="false" />
 
+        <SwitchPreferenceCompat
+            android:key="gamespace_crosshair_enabled"
+            android:title="@string/crosshair_enable"
+            android:summary="@string/crosshair_section_title"
+            android:defaultValue="false" />
+
         <com.crdroid.settings.preferences.SystemSettingSwitchPreference
             android:key="bypass_charge_enabled"
             android:title="@string/bypass_charge_enabled_title"
