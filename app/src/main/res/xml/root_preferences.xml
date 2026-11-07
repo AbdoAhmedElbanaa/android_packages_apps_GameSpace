@@ -82,6 +82,12 @@
             android:summary="@string/call_overlay_enabled_summary"
             android:defaultValue="true" />
 
+        <SwitchPreferenceCompat
+            android:key="gamespace_crosshair_enabled"
+            android:title="@string/crosshair_settings_title"
+            android:summary="@string/crosshair_settings_summary"
+            android:defaultValue="false" />
+
         <ListPreference
             android:key="gamespace_calls_mode"
             android:title="@string/in_game_calls_title"

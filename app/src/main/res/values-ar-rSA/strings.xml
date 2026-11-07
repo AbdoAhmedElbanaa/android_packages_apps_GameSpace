@@ -84,6 +84,7 @@
     <string name="tile_wifi">واي فاي</string>
     <string name="tile_dnd">وضع عدم الإزعاج</string>
     <string name="tile_fps_info">معلومات FPS</string>
+    <string name="tile_crosshair">التصويب (Crosshair)</string>
     <string name="tile_auto_rotate">تدوير تلقائي</string>
     <string name="tile_boost_memory">تعزيز الذاكرة</string>
     <string name="tile_settings">الإعدادات</string>
@@ -151,4 +152,8 @@
     <!-- Pulse bass haptics -->
     <string name="pulse_bass_haptics_disabled_title">تعطيل قواعد النبض اللمس</string>
     <string name="pulse_bass_haptics_disabled_summary">تعطيل قواعد النبض تلقائياً في حالة التمكين</string>
+
+    <!-- Crosshair -->
+    <string name="crosshair_settings_title">نقطة التصويب المخصصة (Crosshair)</string>
+    <string name="crosshair_settings_summary">إظهار علامة تصويب مخصصة في منتصف الشاشة أثناء اللعب</string>
 </resources>

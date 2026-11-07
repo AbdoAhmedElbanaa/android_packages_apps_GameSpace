@@ -102,6 +102,7 @@
     <string name="tile_wifi">Wi-Fi</string>
     <string name="tile_dnd">DND</string>
     <string name="tile_fps_info">FPS Info</string>
+    <string name="tile_crosshair">Crosshair</string>
     <string name="tile_auto_rotate">Auto Rotate</string>
     <string name="tile_boost_memory">Boost Memory</string>
     <string name="tile_settings">Settings</string>
@@ -176,4 +177,8 @@
     <!-- Pulse bass haptics -->
     <string name="pulse_bass_haptics_disabled_title">Disable pulse bass haptics</string>
     <string name="pulse_bass_haptics_disabled_summary">Automatically disable pulse bass haptics if enabled</string>
+
+    <!-- Crosshair -->
+    <string name="crosshair_settings_title">Custom Crosshair</string>
+    <string name="crosshair_settings_summary">Show centered custom aiming reticle overlays on screen</string>
  </resources>
